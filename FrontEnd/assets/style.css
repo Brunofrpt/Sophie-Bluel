@@ -46,6 +46,11 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+nav ul li a {
+	color: inherit;
+	text-decoration: none;
+}
 /** end reset css**/
 body {
 	max-width: 1140px;
@@ -62,16 +67,17 @@ section {
 	margin: 50px 0
 }
 
-h1{
+h1 a{
 	display: flex;
 	flex-direction: column;
 	font-family: 'Syne';
 	font-size: 22px;
 	font-weight: 800;
-	color: #B1663C
+	color: #B1663C;
+	text-decoration: none;
 }
 
-h1 > span {
+h1 a span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
@@ -125,6 +131,34 @@ li:hover {
 	text-align: center;
 	margin-bottom: 1em;
 }
+
+.bloc-filtres {
+
+	width: 585px;
+	margin: auto;
+	margin-bottom: 2em;
+
+}
+
+.boutons-filtres {
+
+	min-width: 100px;
+	height: 37px;
+	border: 1px solid #1D6154;
+	border-radius: 60px;
+	background-color: transparent;
+	color: #1D6154;
+	font-size: 16px;
+	font-family: 'syne';
+}
+
+.actif {
+
+	background-color: #1D6154;
+	color: white;
+
+}
+
 .gallery {
 	width: 100%;
 	display: grid;
@@ -186,3 +220,42 @@ footer nav ul {
 	margin: 2em
 }
 
+
+/***********Page Log In*********/
+
+#connexion {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#connexion h2 {
+	margin-bottom: 1em;
+}
+
+#connexion form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#connexion label {
+	margin: 2em 0 1em 0;
+}
+
+#connexion input {
+  height: 50px;
+  font-size: 1.2em;
+  border: none;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+  max-width: 379px;
+}
+
+#connexion input:not([type="submit"]) {
+	width: 379px;
+}
+
+#connexion a {
+	text-decoration: underline;
+	color: inherit;
+}

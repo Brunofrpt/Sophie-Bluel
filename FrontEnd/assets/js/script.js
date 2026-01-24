@@ -6,17 +6,17 @@
 // État*/
 //****************************************************** */
 
-let listeProjetsWorks = [];
+let listeWorks = [];
 
 //*********************************************************
 // DOM (élements de la page) Fonction réutilisable */
 //****************************************************** */
 
-function recupererElement(selector) {
-    const element = document.querySelector(selector);
+function recupererElement(selecteurCSS) {
+    const element = document.querySelector(selecteurCSS);
 
     if (!element) {
-        console.error(`Erreur : l'élément "${selector}" est introuvable dans le HTML.`);
+        console.error(`Erreur : l'élément "${selecteurCSS}" est introuvable dans le HTML.`);
         return null;
     }
 
@@ -29,13 +29,13 @@ function recupererElement(selector) {
 
 const apiUrl = "http://localhost:5678/api";
 
-async function recupererListeWorks() {
-    const reponseServeurApiListeProjets = await fetch(`${apiUrl}/works`);
+async function chargerWorksDepuisApi() {
+    const reponseApiWorks = await fetch(`${apiUrl}/works`);
 
-    if (!reponseServeurApiListeProjets.ok) {
-        console.error("Erreur API:", reponseServeurApiListeProjets.status, reponseServeurApiListeProjets.statusText);
+    if (!reponseApiWorks.ok) {
+        console.error("Erreur API:", reponseApiWorks.status, reponseApiWorks.statusText);
     } else {
-        listeProjetsWorks = await reponseServeurApiListeProjets.json();
+        listeWorks = await reponseApiWorks.json();
     }
 
 }
@@ -44,39 +44,81 @@ async function recupererListeWorks() {
 //*********************************************************
 // Fonctions*/
 //****************************************************** */
-function afficherMessageAucunProjet(divGallery) {
-    divGallery.innerHTML = "";
+function afficherMessageAucunProjet(dansElement) {
+    dansElement.innerHTML = "";
     const p = document.createElement("p");
     p.innerText = "Aucun projet pour le moment.";
-    divGallery.appendChild(p);
+    dansElement.appendChild(p);
 }
 
-function afficherLesWorks(divGallery) {
+function afficherWorks(dansElement, worksAAfficher) {
 
-    divGallery.innerHTML="";
+    dansElement.innerHTML = "";
 
     //  Si la liste est vide → message
-    if (!listeProjetsWorks || listeProjetsWorks.length === 0) {
-        afficherMessageAucunProjet(divGallery);
+    if (!worksAAfficher || worksAAfficher.length === 0) {
+        afficherMessageAucunProjet(dansElement);
         return;
     }
 
-    for (let i = 0; i < listeProjetsWorks.length; i++) {
+    for (let i = 0; i < worksAAfficher.length; i++) {
 
-        const creerElementWorks = document.createElement("figure");
+        const work = worksAAfficher[i]
 
-        const creerImageElementWorks = document.createElement("img");
-        creerImageElementWorks.src = listeProjetsWorks[i].imageUrl;
+        const figureWorks = document.createElement("figure");
 
-        const creerTitreElementWorks = document.createElement("figcaption");
-        creerTitreElementWorks.innerText = listeProjetsWorks[i].title;
+        const imgWork = document.createElement("img");
+        imgWork.src = work.imageUrl;
 
-        divGallery.appendChild(creerElementWorks);
+        const titreWork = document.createElement("figcaption");
+        titreWork.innerText = work.title;
 
-        creerElementWorks.appendChild(creerImageElementWorks);
-        creerElementWorks.appendChild(creerTitreElementWorks);
+        dansElement.appendChild(figureWorks);
+
+        figureWorks.appendChild(imgWork);
+        figureWorks.appendChild(titreWork);
     }
 
+}
+
+function brancherBoutonFiltres(listeBoutonsFiltres, classeActive, fonctionApresClique) {
+
+    for (let i = 0; i < listeBoutonsFiltres.length; i++) {
+        listeBoutonsFiltres[i].addEventListener("click", function (event) {
+
+            // Retirer class active sur tous les boutons filtres
+            for (let j = 0; j < listeBoutonsFiltres.length; j++) {
+                listeBoutonsFiltres[j].classList.remove(classeActive);
+            }
+
+            const boutonClique = event.currentTarget;
+
+            // ajoute la classe active sur le bouton cliqué
+            boutonClique.classList.add(classeActive);
+
+            //prépare la fonction de filtrage
+            if (fonctionApresClique) {
+                fonctionApresClique(boutonClique);
+            }
+
+        });
+    }
+
+}
+
+function filtrerWorksParCategorie(boutonClique) {
+    const filtreChoisi = boutonClique.dataset.category;
+
+    let worksAAfficher = []
+
+    if (filtreChoisi === "tous") {
+        worksAAfficher = listeWorks
+    } else {
+        worksAAfficher = listeWorks.filter(function (work) {
+            return work.category.name === filtreChoisi
+        });
+    }
+    return worksAAfficher;
 }
 
 //*********************************************************
@@ -91,8 +133,15 @@ async function initialisation() {
     const divGallery = recupererElement(".gallery");
     if (!divGallery) return;
 
-    await recupererListeWorks();
-    afficherLesWorks(divGallery);
+    await chargerWorksDepuisApi();
+    afficherWorks(divGallery, listeWorks);
+
+    const listeBoutonsFiltres = document.querySelectorAll(".boutons-filtres");
+    brancherBoutonFiltres(listeBoutonsFiltres, "actif", function (boutonClique) {
+        const worksAAfficher = filtrerWorksParCategorie(boutonClique);
+        afficherWorks(divGallery, worksAAfficher);
+    }
+    );
 }
 
 initialisation();
