@@ -259,3 +259,14 @@ footer nav ul {
 	text-decoration: underline;
 	color: inherit;
 }
+
+.message-erreur {
+	color: #b00020;
+	margin: 0 0 18px;
+	font-size: 16px;
+}
+
+.champ-erreur {
+  border: 2px solid #b00020 !important;
+  
+}
