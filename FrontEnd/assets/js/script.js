@@ -8,6 +8,8 @@
 
 let listeWorks = [];
 
+const token = localStorage.getItem("token");
+
 //*********************************************************
 // DOM (élements de la page) Fonction réutilisable */
 //****************************************************** */
@@ -22,6 +24,13 @@ function recupererElement(selecteurCSS) {
 
     return element;
 }
+
+const logInOut = document.getElementById("login-out");
+const bandeauNoir = document.querySelector(".bandeau-noir");
+const blocFIltres = document.querySelector(".bloc-filtres");
+const btnModifierProjets = document.querySelector(".modifier-projets");
+const modaleGalerie = document.getElementById("modale-gallerie")
+
 
 //*********************************************************
 // API */
@@ -142,9 +151,34 @@ async function initialisation() {
         afficherWorks(divGallery, worksAAfficher);
     }
     );
+    
+    console.log("token page accueil =", localStorage.getItem("token"));
 }
 
 initialisation();
+
+
+if (token !== null && token !== undefined) {
+    logInOut.textContent = "logout";
+    logInOut.href = "#";
+
+    bandeauNoir.classList.remove("oculter");
+    blocFIltres.remove();
+    btnModifierProjets.classList.remove("oculter");
+
+
+
+    logInOut.addEventListener("click", function (event){
+        event.preventDefault();
+        localStorage.removeItem ("token");
+        window.location.reload();
+    });
+
+} 
+
+btnModifierProjets.addEventListener("click", () => {
+    modaleGalerie.showModal();
+});
 
 
 

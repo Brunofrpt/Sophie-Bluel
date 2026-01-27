@@ -61,7 +61,8 @@ body {
 header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0
+	margin: 50px 0;
+	flex-wrap: wrap;
 }
 section {
 	margin: 50px 0
@@ -90,6 +91,32 @@ h2{
 	font-size: 30px;
 	color: #1D6154
 }
+
+.bandeau-noir {
+	background-color: black;
+	width: 100vw;
+	height: 59px;
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.bandeau-noir p {
+	color: white;
+	font-family: Work Sans;
+	font-size: 16px;
+}
+
+.modifier {
+	color: white;
+}
+
+.oculter {
+	display: none;
+}
+
 nav ul {
 	display: flex;
 	align-items: center;
@@ -127,10 +154,24 @@ li:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
+
+.header_portfolio {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+}
+
+.header_portfolio p {
+	font-family: Work Sans;
+  	font-size: 16px;
+}
+
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
 }
+
+
 
 .bloc-filtres {
 
@@ -219,7 +260,58 @@ footer nav ul {
 	justify-content: flex-end;
 	margin: 2em
 }
+/***********Modale*********/
+dialog::backdrop {
+	background: rgba(0,0,0,0.3);
+}
 
+#modale-gallerie {
+	width: 630px;
+	height: 688px;
+	border-radius: 10px;
+	border: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+.fermeture-modale{
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	border: none;
+	background: none;
+	font-size: 24px;
+	cursor: pointer;
+}
+
+#modale-gallerie h3 {
+	font-family: Work Sans;
+  	font-size: 26px;
+}
+
+.btn-ajouter-img {
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 14px;
+	color: white;
+	background-color: #1D6154;
+	border-radius: 60px ;
+	width: 237px;
+	height: 36px;
+	margin: auto;
+	border: none;
+}
+
+#modale-gallerie span {
+	width: 420px;
+	height: 0;
+	border: solid 1px #B3B3B3
+}
 
 /***********Page Log In*********/
 
