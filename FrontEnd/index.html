@@ -52,7 +52,7 @@
 			<header class="header_portfolio">
 				<h2>Mes Projets</h2>
 				<div class="oculter modifier-projets">
-				<button><i class="fa-regular fa-pen-to-square"></i>modifier</button>
+					<button><i class="fa-regular fa-pen-to-square"></i>modifier</button>
 				</div>
 			</header>
 			<div class="bloc-filtres">
@@ -78,16 +78,49 @@
 				<input type="submit" value="Envoyer">
 			</form>
 		</section>
-		<dialog id="modale-gallerie">
-			<button class="fermeture-modale" aria-label="fermer">x</button>
-			<h3>Galerie Photo</h3>
-			<div>
-				<figure class="image-supprime">
 
-				</figure>
+		<dialog id="modale-gallerie" aria-hidden="true" aria-labelledby="titre-modale">
+			<div class="modale-wraper">
+				<header class="modale-header">
+					<button class="retour oculter" aria-label="retour"> <i class="fa-solid fa-arrow-left"></i> </button>
+					<button class="fermeture-modale" aria-label="fermer">x</button>
+					<h3 id="titre-modale">Galerie Photo</h3>
+				</header>
+
+				<div class="vue-liste"> <!-- vue 1 -->
+
+					<div class="images-modales">
+					</div>
+
+				</div>
+
+				<div class="vue-ajout oculter">
+					<form class="form-ajout-photo" id="form-ajout-photo">
+						<figure class="zone-ajout-photo">
+							<i class="fa-solid fa-image"></i>
+							<label for="fichier-photo" class="btn-photo-modale">+ Ajouter photo</label>
+							<input id="fichier-photo" name="image" type="file" accept=".jpg,.jpeg,.png" class="oculter" required>
+							<figcaption>jpg, png: 4mo max</figcaption>
+						</figure>
+
+						<label for="titre-photo">Titre</label>
+						<input type="text" id="titre-photo" name="title" required>
+							
+
+						<label for="categorie-photo">Catégorie</label>
+						<select id="categorie-photo" name="category" required>
+							<option value="" disabled selected>---selectionner une Catégorie---</option>
+						</select>
+
+					</form>
+				</div>
+
+				<footer class="modale-footer">
+					<span></span>
+					<button class="btn-ajouter-img">Ajouter une Photo</button>
+					<button class="btn-valider oculter" id="btn-valider" type="submit" form="form-ajout-photo" disabled>Valider</button>
+				</footer>
 			</div>
-			<span></span>
-			<button class="btn-ajouter-img">Ajouter une Photo</button>
 		</dialog>
 	</main>
 
