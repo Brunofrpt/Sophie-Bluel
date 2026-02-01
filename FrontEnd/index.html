@@ -52,7 +52,7 @@
 			<header class="header_portfolio">
 				<h2>Mes Projets</h2>
 				<div class="oculter modifier-projets">
-					<button><i class="fa-regular fa-pen-to-square"></i>modifier</button>
+					<button class="btn-modifier"><i class="fa-regular fa-pen-to-square"></i>modifier</button>
 				</div>
 			</header>
 			<div class="bloc-filtres">
@@ -95,12 +95,13 @@
 				</div>
 
 				<div class="vue-ajout oculter">
-					<form class="form-ajout-photo" id="form-ajout-photo">
+					<form class="form-ajout-photo" id="form-ajout-photo" novalidate>
 						<figure class="zone-ajout-photo">
 							<i class="fa-solid fa-image"></i>
 							<label for="fichier-photo" class="btn-photo-modale">+ Ajouter photo</label>
 							<input id="fichier-photo" name="image" type="file" accept=".jpg,.jpeg,.png" class="oculter" required>
-							<figcaption>jpg, png: 4mo max</figcaption>
+							<figcaption class="restrictions">jpg, png: 4mo max</figcaption>
+							<img id="preview-img" class="oculter" src="" alt="aperçu de la photo">
 						</figure>
 
 						<label for="titre-photo">Titre</label>
@@ -118,7 +119,7 @@
 				<footer class="modale-footer">
 					<span></span>
 					<button class="btn-ajouter-img">Ajouter une Photo</button>
-					<button class="btn-valider oculter" id="btn-valider" type="submit" form="form-ajout-photo" disabled>Valider</button>
+					<button class="btn-valider btn-valider-disabled oculter" id="btn-valider" type="submit" form="form-ajout-photo">Valider</button>
 				</footer>
 			</div>
 		</dialog>

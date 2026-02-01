@@ -42,6 +42,15 @@ const vueAjout = document.querySelector(".vue-ajout");
 const btnValiderFormulaire = document.querySelector(".btn-valider");
 const titreModale = document.querySelector("#titre-modale");
 const select = document.getElementById("categorie-photo");
+const inputImage = document.getElementById("fichier-photo");
+const previewImg = document.getElementById("preview-img");
+const iconefigureForm = document.querySelector(".fa-image");
+const labelFigureForm = document.querySelector(".btn-photo-modale");
+const figcaptionFigureForm = document.querySelector(".restrictions");
+const inputTitrePhoto = document.getElementById("titre-photo");
+const zoneAjoutPhoto = document.querySelector(".zone-ajout-photo");
+const formAjoutPhoto = document.getElementById("form-ajout-photo");
+
 
 //*********************************************************
 // API */
@@ -60,13 +69,13 @@ async function chargerWorksDepuisApi() {
 
 }
 
-async function chargerCategoriesForm () {
-    const reponseApiCategories = await fetch (`${apiUrl}/categories`);
+async function chargerCategoriesForm() {
+    const reponseApiCategories = await fetch(`${apiUrl}/categories`);
 
     if (!reponseApiCategories.ok) {
         console.error("Erreur chargement API:", reponseApiCategories.status, reponseApiCategories.statusText);
     } else {
-        listeCategories = await reponseApiCategories.json ();
+        listeCategories = await reponseApiCategories.json();
     }
 }
 
@@ -216,12 +225,12 @@ async function supprimerWork(idWork) {
     afficherWorks(divGallery, listeWorks);
 }
 
-function remplirFormCategories () {
-    for (let i = 0; i < listeCategories.length; i ++) {
+function remplirFormCategories() {
+    for (let i = 0; i < listeCategories.length; i++) {
 
         const categorie = listeCategories[i];
 
-        const option = document.createElement ("option");
+        const option = document.createElement("option");
         option.value = categorie.id;
         option.text = categorie.name;
 
@@ -230,10 +239,72 @@ function remplirFormCategories () {
     }
 }
 
-async function nomATrouver () {
-    await chargerCategoriesForm ();
+async function nomATrouver() {
+    await chargerCategoriesForm();
     remplirFormCategories();
 
+}
+
+function majBtnEnvoyer() {
+
+}
+
+function afficherMessageErreurFormulaire(dansElement) {
+    const messagesErreur = dansElement.querySelectorAll(".message-erreur")
+    for (let i = 0; i < messagesErreur.length; i++) {
+        messagesErreur[i].remove();
+    }
+
+    const messageErreurForm = document.createElement("p");
+    messageErreurForm.classList.add("message-erreur")
+    messageErreurForm.innerText = "Vous devez remplir tous les elements du formulaire";
+
+    dansElement.appendChild(messageErreurForm);
+
+}
+
+function verifierFormMarquerErreur() {
+
+    // reset
+    zoneAjoutPhoto.classList.remove("champ-erreur");
+    inputTitrePhoto.classList.remove("champ-erreur");
+    select.classList.remove("champ-erreur");
+
+    // tests
+    const titreVide = inputTitrePhoto.value.trim().length === 0;
+    const imageAbsente = !inputImage.files[0];
+    const categorieNonChoisie = select.value === "";
+
+    // marque des champs
+    if (titreVide) inputTitrePhoto.classList.add("champ-erreur");
+    if (imageAbsente) zoneAjoutPhoto.classList.add("champ-erreur");
+    if (categorieNonChoisie) select.classList.add("champ-erreur");
+
+    // formulaire valide 
+    const formValide = !titreVide && !imageAbsente && !categorieNonChoisie;
+
+    // gerer bouton
+
+    if (formValide) btnValiderFormulaire.classList.remove("btn-valider-disabled");
+    else btnValiderFormulaire.classList.add ("btn-valider-disabled");
+
+
+    return formValide;//renvoi true ou false
+
+}
+
+function auChangementImage(event) {
+  afficherPreviewImage(event);
+  verifierFormMarquerErreur();
+}
+
+function auSubmitAjoutPhoto(event) {
+
+  const ok = verifierFormMarquerErreur();
+  if (!ok) {
+    event.preventDefault();
+    afficherMessageErreurFormulaire(formAjoutPhoto); // message dans la modale
+  }
 }
 
 
@@ -252,17 +323,17 @@ function ecouterClicBtnCorbeille() {
 }
 
 function basculerVueAjout(event) {
-    vueListe.classList.add ("oculter");
-    btnRetourGalerie.classList.remove ("oculter");
-    btnAjouterPhoto.classList.add ("oculter");
-    btnValiderFormulaire.classList.remove ("oculter");
+    vueListe.classList.add("oculter");
+    btnRetourGalerie.classList.remove("oculter");
+    btnAjouterPhoto.classList.add("oculter");
+    btnValiderFormulaire.classList.remove("oculter");
     titreModale.innerText = "Ajout photo";
-    vueAjout.classList.remove ("oculter");
+    vueAjout.classList.remove("oculter");
 
 }
 
-function basculerVueGalerie (event) {
-    vueAjout.classList.add ("oculter");
+function basculerVueGalerie(event) {
+    vueAjout.classList.add("oculter");
     vueListe.classList.remove("oculter");
     btnRetourGalerie.classList.add("oculter");
     btnAjouterPhoto.classList.remove("oculter");
@@ -270,7 +341,21 @@ function basculerVueGalerie (event) {
     titreModale.innerText = "Galerie photo";
 }
 
+function afficherPreviewImage(event) {
+    console.log("preview: change détecté");
+    const inputContenu = inputImage.files[0];
+    if (!inputContenu) return;
 
+    const url = URL.createObjectURL(inputContenu);
+    previewImg.src = url;
+    previewImg.classList.remove("oculter");
+    iconefigureForm.classList.add("oculter");
+    labelFigureForm.classList.add("oculter");
+    figcaptionFigureForm.classList.add("oculter");
+
+    previewImg.onload = () => URL.revokeObjectURL(url);
+
+}
 
 //*********************************************************
 // Initialisation*/
@@ -315,6 +400,11 @@ if (token !== null && token !== undefined) {
     modaleGalerie.addEventListener("click", fermerModale);
     btnAjouterPhoto.addEventListener("click", basculerVueAjout);
     btnRetourGalerie.addEventListener("click", basculerVueGalerie);
+    inputImage.addEventListener("change", auChangementImage);
+    inputTitrePhoto.addEventListener("input", verifierFormMarquerErreur);
+    select.addEventListener("change", verifierFormMarquerErreur);
+    formAjoutPhoto.addEventListener("submit", auSubmitAjoutPhoto);
+
 
     nomATrouver();
 
