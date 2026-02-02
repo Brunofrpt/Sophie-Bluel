@@ -286,7 +286,7 @@ function verifierFormMarquerErreur() {
     // gerer bouton
 
     if (formValide) btnValiderFormulaire.classList.remove("btn-valider-disabled");
-    else btnValiderFormulaire.classList.add ("btn-valider-disabled");
+    else btnValiderFormulaire.classList.add("btn-valider-disabled");
 
 
     return formValide;//renvoi true ou false
@@ -294,17 +294,57 @@ function verifierFormMarquerErreur() {
 }
 
 function auChangementImage(event) {
-  afficherPreviewImage(event);
-  verifierFormMarquerErreur();
+    afficherPreviewImage(event);
+    verifierFormMarquerErreur();
 }
 
-function auSubmitAjoutPhoto(event) {
+ async function auSubmitAjoutPhoto(event) {
 
-  const ok = verifierFormMarquerErreur();
-  if (!ok) {
     event.preventDefault();
-    afficherMessageErreurFormulaire(formAjoutPhoto); // message dans la modale
-  }
+
+    const ok = verifierFormMarquerErreur();
+    if (!ok) {
+        afficherMessageErreurFormulaire(formAjoutPhoto);
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", inputImage.files[0]);
+    formData.append("title", inputTitrePhoto.value.trim());
+    formData.append("category", select.value);
+
+    const reponseApiWorks = await fetch(`${apiUrl}/works`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        body: formData
+    });
+
+    if (!reponseApiWorks.ok) {
+        afficherMessageErreurFormulaire(formAjoutPhoto);
+        console.error("Erreur chargement :", reponseApiWorks.status);
+        return;
+    }
+
+    await chargerWorksDepuisApi()
+
+    const divGallery = recupererElement(".gallery");
+    afficherWorks(divGallery, listeWorks);
+
+    remplirModaleImagesWorks();
+
+    formAjoutPhoto.reset();
+
+    previewImg.src = "";
+    previewImg.classList.add("oculter");
+    iconefigureForm.classList.remove("oculter");
+    labelFigureForm.classList.remove("oculter");
+    figcaptionFigureForm.classList.remove("oculter");
+
+    verifierFormMarquerErreur();
+
+    basculerVueGalerie();
 }
 
 
@@ -398,6 +438,7 @@ if (token !== null && token !== undefined) {
     btnModifierProjets.addEventListener("click", auClicModifier);
     iconeCroixFermeture.addEventListener("click", fermerModale);
     modaleGalerie.addEventListener("click", fermerModale);
+    modaleGalerie.addEventListener("close", basculerVueGalerie)
     btnAjouterPhoto.addEventListener("click", basculerVueAjout);
     btnRetourGalerie.addEventListener("click", basculerVueGalerie);
     inputImage.addEventListener("change", auChangementImage);
