@@ -57,17 +57,15 @@ formulaire.addEventListener("submit", async function (event) {
 
         const messageErreurConnexion = document.createElement ("p");
         messageErreurConnexion.classList.add ("message-erreur")
-        messageErreurConnexion.innerText = `Erreur dans l’identifiant ou le mot de passe ${reponseLogin.status}`;
+        messageErreurConnexion.innerText = "Erreur dans l’identifiant ou le mot de passe";
         zoneMail.classList.add ("champ-erreur");
         zonePassword.classList.add ("champ-erreur");
 
         formulaire.appendChild(messageErreurConnexion);
-        console.log(messageErreurConnexion);
         return;
     }
     const tokenRecu = await reponseLogin.json();
 
-    console.log("token reçu:", tokenRecu.token);
 
     localStorage.setItem("token", tokenRecu.token)
     window.location.href = "index.html";
